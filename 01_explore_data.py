@@ -11,6 +11,7 @@ to stdout and saves figures in outputs/.
 import json
 import os
 import sys
+import sys; sys.stdout.reconfigure(encoding="utf-8", errors="replace") if hasattr(sys.stdout, "reconfigure") else None
 from collections import defaultdict
 from pathlib import Path
 
@@ -21,7 +22,7 @@ import yaml
 
 # ── Config ─────────────────────────────────────────────────────────────────
 CFG_PATH = Path(__file__).parent / "config.yaml"
-with open(CFG_PATH) as f:
+with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
 
 DATA_DIR    = Path(CFG["paths"]["data_dir"])
@@ -35,7 +36,7 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 def load_ground_truth(gt_path: Path) -> dict[str, int]:
     """Return {subject_id: label} from the space-separated GT file."""
     labels = {}
-    with open(gt_path) as f:
+    with open(gt_path, encoding='utf-8', errors='replace') as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -54,7 +55,7 @@ def load_all_json_files(data_dir: Path) -> list[dict]:
         sys.exit(f"[ERROR] No .json files found in {data_dir}. "
                  "Please place your dataset there.")
     for jf in json_files:
-        with open(jf) as f:
+        with open(jf, encoding='utf-8', errors='replace') as f:
             try:
                 data = json.load(f)
                 # Each file may contain a list of thread dicts or a single dict
@@ -87,7 +88,7 @@ def extract_subject_stats(records: list[dict], labels: dict[str, int]) -> pd.Dat
         comments   = record.get("comments", [])
 
         # Identify the target subject for this thread
-        # Field names may vary — support both schema versions
+        # Field names may vary - support both schema versions
         target_id = (
             submission.get("targetSubject")
             or submission.get("target_subject")
@@ -137,7 +138,7 @@ def extract_subject_stats(records: list[dict], labels: dict[str, int]) -> pd.Dat
 
 def print_summary(df: pd.DataFrame, labels: dict):
     print("\n" + "=" * 60)
-    print("  eRisk 2025 Task 2 — Dataset Summary")
+    print("  eRisk 2025 Task 2 - Dataset Summary")
     print("=" * 60)
 
     total     = len(labels)
@@ -171,7 +172,7 @@ def plot_distributions(df: pd.DataFrame, out_dir: Path):
     labelled["label"] = labelled["label"].astype(int)
 
     fig, axes = plt.subplots(2, 2, figsize=(12, 8))
-    fig.suptitle("eRisk 2025 Task 2 — Dataset Distributions", fontsize=14)
+    fig.suptitle("eRisk 2025 Task 2 - Dataset Distributions", fontsize=14)
 
     metrics = [
         ("total_comments", "Total Comments"),
@@ -198,7 +199,7 @@ def plot_distributions(df: pd.DataFrame, out_dir: Path):
     out_path = out_dir / "eda_distributions.png"
     plt.savefig(out_path, dpi=150)
     plt.close()
-    print(f"  [EDA] Saved plot → {out_path}")
+    print(f"  [EDA] Saved plot -> {out_path}")
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
@@ -223,7 +224,7 @@ def main():
     # Save stats CSV for reference
     stats_path = OUTPUT_DIR / "subject_stats.csv"
     df.to_csv(stats_path, index=False)
-    print(f"  [EDA] Subject stats saved → {stats_path}")
+    print(f"  [EDA] Subject stats saved -> {stats_path}")
 
 
 if __name__ == "__main__":

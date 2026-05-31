@@ -21,6 +21,7 @@ import json
 import logging
 import os
 import sys
+import sys; sys.stdout.reconfigure(encoding="utf-8", errors="replace") if hasattr(sys.stdout, "reconfigure") else None
 from pathlib import Path
 
 import numpy as np
@@ -43,8 +44,8 @@ from transformers import (
 )
 
 # ── Config ────────────────────────────────────────────────────────────────────
-CFG_PATH = Path(__file__).parent.parent / "config.yaml"
-with open(CFG_PATH) as f:
+CFG_PATH = Path(__file__).parent / "config.yaml"
+with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
 
 TRAIN_FILE  = Path(CFG["paths"]["train_file"])
@@ -76,7 +77,7 @@ def load_jsonl(path: Path) -> list[dict]:
     if not path.exists():
         sys.exit(f"[ERROR] {path} not found. Run previous pipeline steps first.")
     data = []
-    with open(path) as f:
+    with open(path, encoding='utf-8', errors='replace') as f:
         for line in f:
             line = line.strip()
             if line:
@@ -273,9 +274,9 @@ def train(
         }
         for i, e in enumerate(val_data)
     ]
-    with open(pred_file, "w") as f:
+    with open(pred_file, "w", encoding='utf-8', errors='replace') as f:
         json.dump(val_preds, f, indent=2)
-    logger.info(f"Val predictions saved → {pred_file}")
+    logger.info(f"Val predictions saved -> {pred_file}")
 
     return {k: v for k, v in metrics.items() if isinstance(v, (int, float))}
 
@@ -328,9 +329,9 @@ def optuna_search(train_data: list[dict], val_data: list[dict]):
         {"trial": t.number, "params": t.params, "f1": t.value}
         for t in study.trials
     ]
-    with open(results_path, "w") as f:
+    with open(results_path, "w", encoding='utf-8', errors='replace') as f:
         json.dump(trials_data, f, indent=2)
-    logger.info(f"Optuna results → {results_path}")
+    logger.info(f"Optuna results -> {results_path}")
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────

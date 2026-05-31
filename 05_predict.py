@@ -9,8 +9,8 @@ For each subject, we feed conversation windows in chronological order
 P(positive) crosses the confidence_threshold set in config.yaml.
 
 Outputs two files in outputs/:
-  predictions_decision.txt   — subject_id  decision  score  round
-  predictions_ranking.txt    — subject_id  score  (for ranking-based eval)
+  predictions_decision.txt   - subject_id  decision  score  round
+  predictions_ranking.txt    - subject_id  score  (for ranking-based eval)
 
 The decision file is the main submission artefact. Both files are also
 saved as JSON for easier programmatic use.
@@ -24,6 +24,7 @@ Usage:
 import argparse
 import json
 import sys
+import sys; sys.stdout.reconfigure(encoding="utf-8", errors="replace") if hasattr(sys.stdout, "reconfigure") else None
 from pathlib import Path
 
 import torch
@@ -33,8 +34,8 @@ from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 # ── Config ────────────────────────────────────────────────────────────────────
-CFG_PATH = Path(__file__).parent.parent / "config.yaml"
-with open(CFG_PATH) as f:
+CFG_PATH = Path(__file__).parent / "config.yaml"
+with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
 
 PREPROCESSED  = Path(CFG["paths"]["preprocessed"])
@@ -110,7 +111,7 @@ def load_and_group(preprocessed_path: Path) -> dict[str, list[dict]]:
     if not preprocessed_path.exists():
         sys.exit(f"[ERROR] {preprocessed_path} not found. Run 02_preprocess.py first.")
 
-    with open(preprocessed_path) as f:
+    with open(preprocessed_path, encoding='utf-8', errors='replace') as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -148,8 +149,8 @@ def run_early_detection(
     results = []
 
     # Decide which rounds to score
-    # score_every=True  → score every message
-    # score_every=False → score only rounds where a new TARGET msg appeared
+    # score_every=True  -> score every message
+    # score_every=False -> score only rounds where a new TARGET msg appeared
     def should_score(ex: dict, prev_target_count: int) -> bool:
         if score_every:
             return True
@@ -214,27 +215,27 @@ def run_early_detection(
 def write_outputs(results: list[dict], out_dir: Path):
     # 1. Decision file (main submission format)
     decision_txt = out_dir / "predictions_decision.txt"
-    with open(decision_txt, "w") as f:
+    with open(decision_txt, "w", encoding='utf-8', errors='replace') as f:
         f.write("subject_id\tdecision\tscore\tdecision_round\n")
         for r in results:
             f.write(f"{r['subject_id']}\t{r['predicted_label']}\t"
                     f"{r['score']:.4f}\t{r['decision_round']}\n")
-    print(f"[PREDICT] Decision predictions → {decision_txt}")
+    print(f"[PREDICT] Decision predictions -> {decision_txt}")
 
     # 2. Ranking file (sorted by descending score)
     ranking_txt = out_dir / "predictions_ranking.txt"
     sorted_r    = sorted(results, key=lambda x: x["score"], reverse=True)
-    with open(ranking_txt, "w") as f:
+    with open(ranking_txt, "w", encoding='utf-8', errors='replace') as f:
         f.write("subject_id\tscore\n")
         for r in sorted_r:
             f.write(f"{r['subject_id']}\t{r['score']:.4f}\n")
-    print(f"[PREDICT] Ranking predictions → {ranking_txt}")
+    print(f"[PREDICT] Ranking predictions -> {ranking_txt}")
 
     # 3. Full JSON for evaluation script
     json_out = out_dir / "predictions_full.json"
-    with open(json_out, "w") as f:
+    with open(json_out, "w", encoding='utf-8', errors='replace') as f:
         json.dump(results, f, indent=2)
-    print(f"[PREDICT] Full predictions JSON → {json_out}")
+    print(f"[PREDICT] Full predictions JSON -> {json_out}")
 
     # 4. Summary
     labelled = [r for r in results if r["true_label"] is not None]

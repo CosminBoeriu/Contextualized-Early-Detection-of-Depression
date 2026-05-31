@@ -26,6 +26,7 @@ import json
 import os
 import re
 import sys
+import sys; sys.stdout.reconfigure(encoding="utf-8", errors="replace") if hasattr(sys.stdout, "reconfigure") else None
 from pathlib import Path
 from typing import Optional
 
@@ -33,8 +34,8 @@ import yaml
 from tqdm import tqdm
 
 # ── Config ────────────────────────────────────────────────────────────────────
-CFG_PATH = Path(__file__).parent.parent / "config.yaml"
-with open(CFG_PATH) as f:
+CFG_PATH = Path(__file__).parent / "config.yaml"
+with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
 
 DATA_DIR       = Path(CFG["paths"]["data_dir"])
@@ -210,7 +211,7 @@ def load_ground_truth(gt_path: Path) -> dict[str, int]:
         print(f"[WARN] Ground truth not found at {gt_path}. "
               "All labels will be null (inference-only mode).")
         return labels
-    with open(gt_path) as f:
+    with open(gt_path, encoding='utf-8', errors='replace') as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -253,7 +254,7 @@ def process_all_records(records: list[dict], labels: dict[str, int]) -> list[dic
 
     Returns a flat list of example dicts ready for JSONL serialisation.
     """
-    # Group records by target subject — one subject may have multiple threads
+    # Group records by target subject - one subject may have multiple threads
     subject_threads: dict[str, list[list[dict]]] = {}
 
     for record in records:
@@ -309,7 +310,7 @@ def main():
 
     all_records = []
     for jf in tqdm(json_files, desc="Loading JSON files"):
-        with open(jf) as f:
+        with open(jf, encoding='utf-8', errors='replace') as f:
             try:
                 data = json.load(f)
                 if isinstance(data, list):

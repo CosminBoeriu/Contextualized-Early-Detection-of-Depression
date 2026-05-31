@@ -5,7 +5,7 @@
 Split the preprocessed JSONL into train / val sets.
 
 IMPORTANT: The split is done at the SUBJECT level (not example level) to
-avoid data leakage — all rounds from the same subject go into the same
+avoid data leakage - all rounds from the same subject go into the same
 partition. Stratification preserves the class ratio.
 
 For training we use the LAST conversation window for each subject
@@ -18,6 +18,7 @@ Outputs: data/train.jsonl, data/val.jsonl
 import json
 import random
 import sys
+import sys; sys.stdout.reconfigure(encoding="utf-8", errors="replace") if hasattr(sys.stdout, "reconfigure") else None
 from collections import defaultdict
 from pathlib import Path
 
@@ -25,8 +26,8 @@ import yaml
 from sklearn.model_selection import train_test_split
 
 # ── Config ────────────────────────────────────────────────────────────────────
-CFG_PATH = Path(__file__).parent.parent / "config.yaml"
-with open(CFG_PATH) as f:
+CFG_PATH = Path(__file__).parent / "config.yaml"
+with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
 
 IN_FILE    = Path(CFG["paths"]["preprocessed"])
@@ -47,7 +48,7 @@ def load_jsonl(path: Path) -> list[dict]:
     if not path.exists():
         sys.exit(f"[ERROR] {path} not found. Run 02_preprocess.py first.")
     examples = []
-    with open(path) as f:
+    with open(path, encoding='utf-8', errors='replace') as f:
         for line in f:
             line = line.strip()
             if line:
@@ -74,9 +75,9 @@ def select_training_examples(
     strategy: str = "last_only",
 ) -> list[dict]:
     """
-    'last_only'  — use only the final window (max context); fast but low data volume
-    'all_rounds' — use every intermediate window (data augmentation; may overfit)
-    'milestone'  — use windows at rounds 1, 10, 50, 100, 200, last
+    'last_only'  - use only the final window (max context); fast but low data volume
+    'all_rounds' - use every intermediate window (data augmentation; may overfit)
+    'milestone'  - use windows at rounds 1, 10, 50, 100, 200, last
     """
     if strategy == "last_only":
         return [subject_examples[-1]]
@@ -107,7 +108,7 @@ def main():
     # Choose how much context to include in training examples.
     # "all_rounds"  = richest data; good for small datasets.
     # "last_only"   = cleanest; avoids seeing many near-duplicate examples.
-    TRAIN_STRATEGY = "all_rounds"   # ← change here if desired
+    TRAIN_STRATEGY = "all_rounds"   # <- change here if desired
 
     print(f"[SPLIT] Loading {IN_FILE} ...")
     examples = load_jsonl(IN_FILE)
@@ -137,7 +138,7 @@ def main():
     )
     print(f"[SPLIT] Train subjects: {len(train_sids)} | Val subjects: {len(val_sids)}")
 
-    # Expand subjects → examples using chosen strategy
+    # Expand subjects -> examples using chosen strategy
     train_examples = []
     for sid in train_sids:
         train_examples.extend(select_training_examples(by_subject[sid], TRAIN_STRATEGY))
@@ -147,12 +148,12 @@ def main():
         # For validation always use the last (most complete) window
         val_examples.extend(select_training_examples(by_subject[sid], "last_only"))
 
-    # Shuffle training examples (not val — we may want ordered eval)
+    # Shuffle training examples (not val - we may want ordered eval)
     random.shuffle(train_examples)
 
     # Write output
     def write_jsonl(path: Path, data: list[dict]):
-        with open(path, "w") as f:
+        with open(path, "w", encoding='utf-8', errors='replace') as f:
             for ex in data:
                 f.write(json.dumps(ex, ensure_ascii=False) + "\n")
 
@@ -179,7 +180,7 @@ def main():
         test_by_subject = group_by_subject(unlabelled)
         test_examples   = [grp[-1] for grp in test_by_subject.values()]
         write_jsonl(test_subjects_file, test_examples)
-        print(f"[SPLIT] Test set (unlabelled): {len(test_examples)} subjects → {test_subjects_file}")
+        print(f"[SPLIT] Test set (unlabelled): {len(test_examples)} subjects -> {test_subjects_file}")
 
 
 if __name__ == "__main__":

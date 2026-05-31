@@ -23,6 +23,7 @@ import argparse
 import json
 import math
 import sys
+import sys; sys.stdout.reconfigure(encoding="utf-8", errors="replace") if hasattr(sys.stdout, "reconfigure") else None
 from pathlib import Path
 
 import numpy as np
@@ -35,8 +36,8 @@ from sklearn.metrics import (
 )
 
 # ── Config ────────────────────────────────────────────────────────────────────
-CFG_PATH = Path(__file__).parent.parent / "config.yaml"
-with open(CFG_PATH) as f:
+CFG_PATH = Path(__file__).parent / "config.yaml"
+with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
 
 OUTPUT_DIR   = Path(CFG["paths"]["output_dir"])
@@ -163,7 +164,7 @@ def ranking_metrics(results: list[dict], k_vals: list[int]) -> dict[str, float]:
 def evaluate(results: list[dict]) -> dict:
     labelled = [r for r in results if r["true_label"] is not None]
     if not labelled:
-        print("[EVAL] No labelled results — skipping decision-based metrics.")
+        print("[EVAL] No labelled results - skipping decision-based metrics.")
         return {}
 
     true  = [r["true_label"]      for r in labelled]
@@ -202,7 +203,7 @@ def print_report(metrics: dict, results: list[dict]):
     preds = [r["predicted_label"] for r in labelled]
 
     print("\n" + "=" * 60)
-    print("  eRisk 2025 Task 2 — Evaluation Report")
+    print("  eRisk 2025 Task 2 - Evaluation Report")
     print("=" * 60)
 
     print(f"\n  Subjects evaluated : {metrics.get('num_subjects', 0)}")
@@ -261,7 +262,7 @@ def main():
         sys.exit(f"[ERROR] Predictions file not found: {preds_path}\n"
                  "Run 05_predict.py first.")
 
-    with open(preds_path) as f:
+    with open(preds_path, encoding='utf-8', errors='replace') as f:
         results = json.load(f)
 
     print(f"[EVAL] Loaded {len(results)} subject predictions.")
@@ -270,9 +271,9 @@ def main():
     print_report(metrics, results)
 
     out_path = Path(args.out)
-    with open(out_path, "w") as f:
+    with open(out_path, "w", encoding='utf-8', errors='replace') as f:
         json.dump(metrics, f, indent=2)
-    print(f"[EVAL] Evaluation results saved → {out_path}")
+    print(f"[EVAL] Evaluation results saved -> {out_path}")
 
 
 if __name__ == "__main__":
