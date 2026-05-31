@@ -1,0 +1,93 @@
+# =============================================================================
+# eRisk 2025 Task 2 — Central Configuration
+# Edit paths and hyperparameters here; all scripts read this file.
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+paths:
+  data_dir: "final-eriskt2-dataset-with-ground-truth/final-eriskt2-dataset-with-ground-truth/all_combined"
+  ground_truth: "final-eriskt2-dataset-with-ground-truth/final-eriskt2-dataset-with-ground-truth/shuffled_ground_truth_labels.txt"
+  preprocessed: "outputs/preprocessed.jsonl"
+  train_file: "outputs/train.jsonl"
+  val_file: "outputs/val.jsonl"
+  model_dir: "models"
+  output_dir: "outputs"
+  log_dir: "logs"
+
+# ---------------------------------------------------------------------------
+# Preprocessing
+# ---------------------------------------------------------------------------
+preprocessing:
+  max_tokens: 512           # token budget per formatted conversation window
+  max_context_messages: 10  # how many surrounding messages to keep as context
+  remove_urls: true
+  remove_brackets: true     # remove [deleted], [removed], etc.
+  anonymize_users: true     # replace user IDs with generic "user"
+
+# ---------------------------------------------------------------------------
+# Dataset split
+# ---------------------------------------------------------------------------
+split:
+  val_size: 0.15            # fraction of labelled data held out for validation
+  random_seed: 42
+  stratify: true            # keep class balance in train/val
+
+# ---------------------------------------------------------------------------
+# Model
+# ---------------------------------------------------------------------------
+model:
+  # Choices: roberta-base | roberta-large |
+  #          mental_health/mental-roberta-base | mental_health/mental-roberta-large
+  name: "roberta-base"
+  num_labels: 2
+
+# ---------------------------------------------------------------------------
+# Training
+# ---------------------------------------------------------------------------
+training:
+  learning_rate: 1.0e-5
+  batch_size: 8
+  num_epochs: 5
+  weight_decay: 0.1
+  warmup_ratio: 0.1
+  gradient_accumulation_steps: 2
+  fp16: true                # set false if no GPU or old GPU
+  early_stopping_patience: 2
+  metric_for_best: "f1"     # f1 | precision | recall | loss
+  use_class_weights: true   # handle imbalance via weighted CE loss
+  save_best_only: true
+  dataloader_num_workers: 2
+
+# ---------------------------------------------------------------------------
+# Hyperparameter search (Optuna) — used by 04_train.py --search
+# ---------------------------------------------------------------------------
+optuna:
+  n_trials: 20
+  search_space:
+    learning_rate: [1.0e-5, 5.0e-5]
+    batch_size: [4, 8, 16]
+    weight_decay: [0.01, 0.1, 1.0]
+
+# ---------------------------------------------------------------------------
+# Inference / Early Detection
+# ---------------------------------------------------------------------------
+inference:
+  # Confidence threshold [0-1]: once P(positive) >= threshold, fire prediction
+  # Lower = earlier (more recall, less precision); Higher = later (more precision)
+  confidence_threshold: 0.5
+  # Minimum number of messages seen before any decision is allowed
+  min_messages_before_decision: 1
+  batch_size: 16
+  # If true, re-score at every new message; if false, only score when new
+  # TARGET messages appear
+  score_on_every_message: false
+
+# ---------------------------------------------------------------------------
+# Evaluation
+# ---------------------------------------------------------------------------
+evaluation:
+  erde_o_values: [5, 50]    # ERDE thresholds (messages)
+  ndcg_cutoffs: [10, 100]   # ranking eval cutoffs
+  p_at_k: [10]
