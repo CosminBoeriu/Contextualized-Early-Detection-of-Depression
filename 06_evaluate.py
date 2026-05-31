@@ -49,8 +49,16 @@ P_AT_K       = CFG["evaluation"]["p_at_k"]
 # ── ERDE ──────────────────────────────────────────────────────────────────────
 
 def lc(delay: int, o: int) -> float:
-    """Latency cost function (sigmoid-based), as defined in eRisk."""
-    return 1.0 - (1.0 / (1.0 + math.exp(delay - o)))
+    """Stable latency cost function for ERDE."""
+    x = delay - o
+
+    if x >= 50:
+        return 1.0
+
+    if x <= -50:
+        return 0.0
+
+    return 1.0 / (1.0 + math.exp(-x))
 
 
 def erde(results: list[dict], o: int) -> float:

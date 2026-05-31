@@ -20,12 +20,15 @@ paths:
 # Preprocessing
 # ---------------------------------------------------------------------------
 preprocessing:
-  max_tokens: 512           # token budget per formatted conversation window
-  max_context_messages: 10  # how many surrounding messages to keep as context
+  max_context_messages: 30
+  max_target_messages: 20
   remove_urls: true
-  remove_brackets: true     # remove [deleted], [removed], etc.
-  anonymize_users: true     # replace user IDs with generic "user"
+  remove_brackets: false
+  anonymize_users: true
+  max_tokens: 512
 
+  use_milestones_only: true
+  milestone_rounds: [1, 2, 3, 5, 10, 20, 50, 100, 200]
 # ---------------------------------------------------------------------------
 # Dataset split
 # ---------------------------------------------------------------------------
@@ -40,7 +43,7 @@ split:
 model:
   # Choices: roberta-base | roberta-large |
   #          mental_health/mental-roberta-base | mental_health/mental-roberta-large
-  name: "roberta-base"
+  name: "AIMH/mental-roberta-large"
   num_labels: 2
 
 # ---------------------------------------------------------------------------

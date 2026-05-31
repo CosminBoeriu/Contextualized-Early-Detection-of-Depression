@@ -245,58 +245,130 @@ def infer_target_id(record: dict) -> Optional[str]:
 
     return None
 
+from collections import deque
+from typing import Optional
+
+
+MAX_TARGET_MSGS = CFG["preprocessing"].get("max_target_messages", 20)
+MAX_CONTEXT_MSGS = CFG["preprocessing"].get("max_context_messages", 30)
+
+# Useful for reducing training size.
+# Keep early rounds + periodic rounds + final round.
+MILESTONE_ROUNDS = set(CFG["preprocessing"].get(
+    "milestone_rounds",
+    [1, 2, 3, 5, 10, 20, 50, 100, 200]
+))
+
+USE_MILESTONES_ONLY = CFG["preprocessing"].get("use_milestones_only", False)
+
+
+def format_message(m: dict) -> str:
+    role = "TARGET" if m["is_target"] else "CONTEXT"
+    msg_type = m.get("type", "message").upper()
+    return f"[MSG] [USER] {role} [{msg_type}] {m['text']}"
+
+
+def format_fast_window(
+    target_buffer: deque,
+    context_buffer: deque,
+) -> str:
+    """
+    Build a compact conversation window from recent target and context messages.
+    Much faster than scanning the full previous history every time.
+    """
+    window = list(target_buffer) + list(context_buffer)
+    window.sort(key=lambda m: m["date"])
+
+    return " ".join(format_message(m) for m in window if m.get("text", "").strip())
+
 
 def process_all_records(records: list[dict], labels: dict[str, int]) -> list[dict]:
     """
-    For each thread, build per-round examples (one example per message seen).
-    A new example is emitted every time a new message appears (or only on
-    TARGET messages, depending on config).
+    Efficient preprocessing for eRisk Task 2.
 
-    Returns a flat list of example dicts ready for JSONL serialisation.
+    Main idea:
+    - group threads by target subject
+    - merge messages chronologically
+    - maintain rolling target/context buffers
+    - emit one example only when the target user writes
     """
-    # Group records by target subject - one subject may have multiple threads
     subject_threads: dict[str, list[list[dict]]] = {}
+
+    print("[PREPROCESS] Grouping threads by subject...")
 
     for record in records:
         target_id = infer_target_id(record)
         if target_id is None:
             continue
+
         msgs = build_message_sequence(record, target_id)
         if not msgs:
             continue
+
         subject_threads.setdefault(target_id, []).append(msgs)
 
     examples = []
-    for subject_id, all_thread_msgs in subject_threads.items():
-        label = labels.get(subject_id)  # None for unlabelled
 
-        # Merge all threads into one chronological stream
+    print("[PREPROCESS] Creating incremental examples...")
+
+    for subject_id, all_thread_msgs in tqdm(subject_threads.items(), desc="Subjects"):
+        label = labels.get(subject_id)
+
         combined = sorted(
             [m for thread in all_thread_msgs for m in thread],
             key=lambda m: m["date"]
         )
 
-        # Emit one example per message (rolling window)
-        for i, _ in enumerate(combined, start=1):
-            window  = combined[:i]
-            n_target = sum(1 for m in window if m["is_target"])
-            fmt_text = format_conversation_window(window)
+        target_buffer = deque(maxlen=MAX_TARGET_MSGS)
+        context_buffer = deque(maxlen=MAX_CONTEXT_MSGS)
 
-            if not fmt_text.strip():
-                continue
+        n_target = 0
+        emitted_for_subject = []
 
-            examples.append({
-                "subject_id":      subject_id,
-                "label":           label,
-                "round":           i,
-                "num_target_msgs": n_target,
-                "num_total_msgs":  i,
-                "formatted_text":  fmt_text,
-            })
+        for total_seen, msg in enumerate(combined, start=1):
+
+            if msg["is_target"]:
+                n_target += 1
+                target_buffer.append(msg)
+
+                formatted_text = format_fast_window(
+                    target_buffer=target_buffer,
+                    context_buffer=context_buffer
+                )
+
+                if not formatted_text.strip():
+                    continue
+
+                example = {
+                    "subject_id": subject_id,
+                    "label": label,
+                    "round": n_target,
+                    "num_target_msgs": n_target,
+                    "num_total_msgs": total_seen,
+                    "formatted_text": formatted_text,
+                }
+
+                emitted_for_subject.append(example)
+
+            else:
+                context_buffer.append(msg)
+
+        if not emitted_for_subject:
+            continue
+
+        if USE_MILESTONES_ONLY:
+            final_round = emitted_for_subject[-1]["round"]
+
+            selected = [
+                ex for ex in emitted_for_subject
+                if ex["round"] in MILESTONE_ROUNDS or ex["round"] == final_round
+            ]
+
+            examples.extend(selected)
+        else:
+            examples.extend(emitted_for_subject)
 
     return examples
-
-
 def main():
     print(f"[PREPROCESS] Loading ground truth from {GT_FILE} ...")
     labels = load_ground_truth(GT_FILE)
@@ -324,7 +396,7 @@ def main():
     examples = process_all_records(all_records, labels)
 
     print(f"[PREPROCESS] Writing {len(examples)} examples to {OUT_FILE} ...")
-    with open(OUT_FILE, "w") as out:
+    with open(OUT_FILE, "w", encoding="utf-8", errors="replace") as out:
         for ex in examples:
             out.write(json.dumps(ex, ensure_ascii=False) + "\n")
 

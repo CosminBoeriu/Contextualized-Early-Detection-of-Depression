@@ -180,6 +180,7 @@ def train(
     Returns best val metrics dict.
     """
     logger.info(f"Loading tokenizer & model: {model_name}")
+    print(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model     = AutoModelForSequenceClassification.from_pretrained(
         model_name,
@@ -208,7 +209,7 @@ def train(
 
     args = TrainingArguments(
         output_dir=str(run_dir),
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="epoch",
         learning_rate=lr,
         per_device_train_batch_size=batch_size,
