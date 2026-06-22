@@ -1,21 +1,3 @@
-#!/usr/bin/env python3
-"""
-04_train.py
------------
-Fine-tune a transformer encoder for binary depression classification.
-
-Features:
-  - Weighted cross-entropy loss to handle severe class imbalance
-  - Early stopping on val F1
-  - Optuna hyperparameter search (pass --search)
-  - Saves best checkpoint to models/<model_name>/
-
-Usage:
-  python scripts/04_train.py                # single run with config.yaml params
-  python scripts/04_train.py --search       # Optuna HP search
-  python scripts/04_train.py --lr 2e-5 --batch_size 8 --epochs 3
-"""
-
 import argparse
 import json
 import logging
@@ -43,7 +25,7 @@ from transformers import (
     set_seed,
 )
 
-# ── Config ────────────────────────────────────────────────────────────────────
+
 CFG_PATH = Path(__file__).parent / "config.yaml"
 with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
@@ -70,8 +52,6 @@ MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
 set_seed(SEED)
 
-
-# ── Dataset ───────────────────────────────────────────────────────────────────
 
 def load_jsonl(path: Path) -> list[dict]:
     if not path.exists():
@@ -113,8 +93,6 @@ class DepressionDataset(Dataset):
         }
 
 
-# ── Class weights ─────────────────────────────────────────────────────────────
-
 def compute_class_weights(examples: list[dict]) -> torch.Tensor:
     labels = [int(e["label"]) for e in examples]
     pos = sum(labels)
@@ -125,8 +103,6 @@ def compute_class_weights(examples: list[dict]) -> torch.Tensor:
     logger.info(f"Class weights: neg={w0:.3f}, pos={w1:.3f}")
     return torch.tensor([w0, w1], dtype=torch.float)
 
-
-# ── Metrics ───────────────────────────────────────────────────────────────────
 
 def make_compute_metrics(threshold: float = 0.5):
     def compute_metrics(eval_pred):
@@ -139,8 +115,6 @@ def make_compute_metrics(threshold: float = 0.5):
         return {"f1": f1, "precision": p, "recall": r}
     return compute_metrics
 
-
-# ── Custom Trainer with weighted loss ─────────────────────────────────────────
 
 class WeightedTrainer(Trainer):
     def __init__(self, class_weights: torch.Tensor, *args, **kwargs):
@@ -161,8 +135,6 @@ class WeightedTrainer(Trainer):
         return (loss, outputs) if return_outputs else loss
 
 
-# ── Training Function ─────────────────────────────────────────────────────────
-
 def train(
     model_name:    str,
     train_data:    list[dict],
@@ -175,10 +147,6 @@ def train(
     use_class_weights: bool = True,
     fp16:          bool = True,
 ) -> dict:
-    """
-    Fine-tune model_name on train_data, evaluate on val_data.
-    Returns best val metrics dict.
-    """
     logger.info(f"Loading tokenizer & model: {model_name}")
     print(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -189,16 +157,15 @@ def train(
     )
 
     max_length = CFG["preprocessing"]["max_tokens"]
-    train_ds   = DepressionDataset(train_data, tokenizer, max_length)
-    val_ds     = DepressionDataset(val_data,   tokenizer, max_length)
+    train_ds = DepressionDataset(train_data, tokenizer, max_length)
+    val_ds = DepressionDataset(val_data,   tokenizer, max_length)
 
-    class_weights = compute_class_weights(train_data) if use_class_weights \
-                    else torch.ones(NUM_LABELS)
+    class_weights = compute_class_weights(train_data) if use_class_weights else torch.ones(NUM_LABELS)
 
-    warmup_ratio  = CFG["training"]["warmup_ratio"]
-    patience      = CFG["training"]["early_stopping_patience"]
-    metric_best   = CFG["training"]["metric_for_best"]
-    grad_accum    = CFG["training"]["gradient_accumulation_steps"]
+    warmup_ratio = CFG["training"]["warmup_ratio"]
+    patience = CFG["training"]["early_stopping_patience"]
+    metric_best = CFG["training"]["metric_for_best"]
+    grad_accum  = CFG["training"]["gradient_accumulation_steps"]
 
     safe_model_name = model_name.replace("/", "_")
     run_dir = output_dir / safe_model_name
@@ -240,7 +207,7 @@ def train(
         callbacks=[EarlyStoppingCallback(early_stopping_patience=patience)],
     )
 
-    logger.info("Starting training ...")
+    logger.info("Starting training")
     trainer.train()
 
     # Save best model
@@ -255,10 +222,10 @@ def train(
 
     # Full classification report
     preds_out = trainer.predict(val_ds)
-    logits    = preds_out.predictions
-    probs     = torch.softmax(torch.tensor(logits), dim=-1).numpy()
-    preds     = (probs[:, 1] >= 0.5).astype(int)
-    true      = [int(e["label"]) for e in val_data]
+    logits = preds_out.predictions
+    probs = torch.softmax(torch.tensor(logits), dim=-1).numpy()
+    preds = (probs[:, 1] >= 0.5).astype(int)
+    true = [int(e["label"]) for e in val_data]
 
     report = classification_report(true, preds,
                                    target_names=["Control", "Depression"])
@@ -281,8 +248,6 @@ def train(
 
     return {k: v for k, v in metrics.items() if isinstance(v, (int, float))}
 
-
-# ── Optuna Search ─────────────────────────────────────────────────────────────
 
 def optuna_search(train_data: list[dict], val_data: list[dict]):
     try:
@@ -339,33 +304,27 @@ def optuna_search(train_data: list[dict], val_data: list[dict]):
 
 def parse_args():
     p = argparse.ArgumentParser(description="Train depression classifier")
-    p.add_argument("--search",      action="store_true",
-                   help="Run Optuna hyperparameter search instead of single run")
-    p.add_argument("--model",       default=MODEL_NAME,
-                   help="HuggingFace model name or path")
-    p.add_argument("--lr",          type=float,
-                   default=CFG["training"]["learning_rate"])
-    p.add_argument("--batch_size",  type=int,
-                   default=CFG["training"]["batch_size"])
-    p.add_argument("--epochs",      type=int,
-                   default=CFG["training"]["num_epochs"])
-    p.add_argument("--weight_decay",type=float,
-                   default=CFG["training"]["weight_decay"])
+    p.add_argument("--search", action="store_true", help="Run Optuna hyperparameter search instead of single run")
+    p.add_argument("--model", default=MODEL_NAME,help="HuggingFace model name or path")
+    p.add_argument("--lr", type=float, default=CFG["training"]["learning_rate"])
+    p.add_argument("--batch_size", type=int, default=CFG["training"]["batch_size"])
+    p.add_argument("--epochs", type=int, default=CFG["training"]["num_epochs"])
+    p.add_argument("--weight_decay", type=float, default=CFG["training"]["weight_decay"])
     return p.parse_args()
 
 
 def main():
     args = parse_args()
 
-    logger.info(f"[TRAIN] Loading train data from {TRAIN_FILE} ...")
+    logger.info(f"[TRAIN] Loading train data from {TRAIN_FILE}")
     train_data = load_jsonl(TRAIN_FILE)
-    logger.info(f"[TRAIN] Loading val data from {VAL_FILE} ...")
+    logger.info(f"[TRAIN] Loading val data from {VAL_FILE}")
     val_data   = load_jsonl(VAL_FILE)
 
     logger.info(f"[TRAIN] Train: {len(train_data)} examples | Val: {len(val_data)} examples")
 
     if args.search:
-        logger.info("[TRAIN] Starting Optuna hyperparameter search ...")
+        logger.info("[TRAIN] Starting Optuna hyperparameter search")
         optuna_search(train_data, val_data)
     else:
         logger.info(f"[TRAIN] Single run: model={args.model}, lr={args.lr}, "

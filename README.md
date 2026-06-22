@@ -1,4 +1,4 @@
-# eRisk 2025 Task 2 — Contextualized Early Depression Detection Pipeline
+# eRisk 2025 Task 2 - Contextualized Early Depression Detection Pipeline
 
 ## Overview
 
@@ -38,7 +38,7 @@ erisk_task2/
 # 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Edit config.yaml — set DATA_DIR, MODEL_NAME, etc.
+# 2. Edit config.yaml - set DATA_DIR, MODEL_NAME, etc.
 
 # 3. Explore your data
 python scripts/01_explore_data.py

@@ -1,13 +1,3 @@
-#!/usr/bin/env python3
-"""
-01_explore_data.py
-------------------
-Exploratory Data Analysis for the eRisk 2025 Task 2 dataset.
-
-Outputs summary statistics, class balance, and message-count distributions
-to stdout and saves figures in outputs/.
-"""
-
 import json
 import os
 import sys
@@ -25,9 +15,9 @@ CFG_PATH = Path(__file__).parent / "config.yaml"
 with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
 
-DATA_DIR    = Path(CFG["paths"]["data_dir"])
-GT_FILE     = Path(CFG["paths"]["ground_truth"])
-OUTPUT_DIR  = Path(CFG["paths"]["output_dir"])
+DATA_DIR = Path(CFG["paths"]["data_dir"])
+GT_FILE = Path(CFG["paths"]["ground_truth"])
+OUTPUT_DIR = Path(CFG["paths"]["output_dir"])
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -52,8 +42,7 @@ def load_all_json_files(data_dir: Path) -> list[dict]:
     records = []
     json_files = sorted(data_dir.glob("*.json"))
     if not json_files:
-        sys.exit(f"[ERROR] No .json files found in {data_dir}. "
-                 "Please place your dataset there.")
+        sys.exit(f"[ERROR] No .json files found in {data_dir}. " "Please place your dataset there.")
     for jf in json_files:
         with open(jf, encoding='utf-8', errors='replace') as f:
             try:
@@ -64,7 +53,7 @@ def load_all_json_files(data_dir: Path) -> list[dict]:
                 else:
                     records.append(data)
             except json.JSONDecodeError as e:
-                print(f"  [WARN] Could not parse {jf.name}: {e}")
+                print(f"[WARN] Could not parse {jf.name}: {e}")
     return records
 
 
@@ -83,25 +72,21 @@ def extract_subject_stats(records: list[dict], labels: dict[str, int]) -> pd.Dat
     })
 
     for record in records:
-        # Each record is one thread (submission + comments)
         submission = record.get("submission", {})
         comments   = record.get("comments", [])
 
-        # Identify the target subject for this thread
-        # Field names may vary - support both schema versions
         target_id = (
             submission.get("targetSubject")
             or submission.get("target_subject")
             or None
         )
 
-        # Also find who is flagged as target=True in comments
         target_from_comments = None
         for c in comments:
             if c.get("target") is True:
                 target_from_comments = c.get("user_id") or c.get("author")
                 break
-        # Submission target flag
+
         if submission.get("target") is True:
             target_from_comments = submission.get("user_id") or submission.get("author")
 
@@ -113,7 +98,6 @@ def extract_subject_stats(records: list[dict], labels: dict[str, int]) -> pd.Dat
         s["num_threads"] += 1
         s["label"] = labels.get(subject_id)
 
-        # Submission text
         sub_text = " ".join(filter(None, [
             submission.get("title", ""),
             submission.get("body", ""),
@@ -138,7 +122,7 @@ def extract_subject_stats(records: list[dict], labels: dict[str, int]) -> pd.Dat
 
 def print_summary(df: pd.DataFrame, labels: dict):
     print("\n" + "=" * 60)
-    print("  eRisk 2025 Task 2 - Dataset Summary")
+    print("eRisk 2025 Task 2 - Dataset Summary")
     print("=" * 60)
 
     total     = len(labels)
@@ -146,11 +130,11 @@ def print_summary(df: pd.DataFrame, labels: dict):
     negative  = sum(v == 0 for v in labels.values())
     unknown   = total - positive - negative
 
-    print(f"\n  Total labelled subjects : {total}")
-    print(f"  Positive (depression)   : {positive}  ({100*positive/total:.1f}%)")
-    print(f"  Negative (control)      : {negative}  ({100*negative/total:.1f}%)")
+    print(f"\n Total labelled subjects : {total}")
+    print(f"Positive (depression): {positive}  ({100*positive/total:.1f}%)")
+    print(f"Negative (control): {negative}  ({100*negative/total:.1f}%)")
     if unknown:
-        print(f"  Unknown label           : {unknown}")
+        print(f"Unknown label: {unknown}")
 
     labelled_df = df[df["label"].notna()].copy()
     labelled_df["label"] = labelled_df["label"].astype(int)
@@ -158,10 +142,10 @@ def print_summary(df: pd.DataFrame, labels: dict):
     for grp_name, grp in labelled_df.groupby("label"):
         tag = "POSITIVE" if grp_name == 1 else "NEGATIVE"
         print(f"\n  [{tag}] n={len(grp)}")
-        print(f"    Avg threads/subject  : {grp['num_threads'].mean():.2f}")
-        print(f"    Avg comments/subject : {grp['total_comments'].mean():.2f}")
-        print(f"    Avg words/subject    : {grp['total_words'].mean():.1f}")
-        print(f"    Avg self-comments    : {grp['self_comments'].mean():.2f}")
+        print(f"Avg threads/subject: {grp['num_threads'].mean():.2f}")
+        print(f"Avg comments/subject: {grp['total_comments'].mean():.2f}")
+        print(f"Avg words/subject: {grp['total_words'].mean():.1f}")
+        print(f"Avg self-comments: {grp['self_comments'].mean():.2f}")
 
     print("\n")
 
@@ -176,9 +160,9 @@ def plot_distributions(df: pd.DataFrame, out_dir: Path):
 
     metrics = [
         ("total_comments", "Total Comments"),
-        ("total_words",    "Total Words"),
-        ("self_comments",  "Self-Comments"),
-        ("num_threads",    "Number of Threads"),
+        ("total_words", "Total Words"),
+        ("self_comments", "Self-Comments"),
+        ("num_threads", "Number of Threads"),
     ]
 
     colors = {0: "#4C9BE8", 1: "#E84C4C"}
@@ -205,17 +189,17 @@ def plot_distributions(df: pd.DataFrame, out_dir: Path):
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
-    print(f"[EDA] Loading ground truth from {GT_FILE} ...")
+    print(f"[EDA] Loading ground truth from {GT_FILE}")
     if not GT_FILE.exists():
         sys.exit(f"[ERROR] Ground truth file not found: {GT_FILE}")
     labels = load_ground_truth(GT_FILE)
     print(f"[EDA] Loaded labels for {len(labels)} subjects.")
 
-    print(f"[EDA] Loading JSON files from {DATA_DIR} ...")
+    print(f"[EDA] Loading JSON files from {DATA_DIR}")
     records = load_all_json_files(DATA_DIR)
     print(f"[EDA] Loaded {len(records)} thread records.")
 
-    print("[EDA] Extracting per-subject statistics ...")
+    print("[EDA] Extracting per-subject statistics")
     df = extract_subject_stats(records, labels)
 
     print_summary(df, labels)

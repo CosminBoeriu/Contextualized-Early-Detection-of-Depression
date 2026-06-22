@@ -1,27 +1,3 @@
-#!/usr/bin/env python3
-"""
-02_preprocess.py
-----------------
-Parse the raw JSON thread files into a structured JSONL format.
-
-For each subject, we emit ONE record per "message round" (i.e., after each
-new message by the target subject appears). Each record contains:
-
-  {
-    "subject_id": "subject_XXX",
-    "label": 0 or 1 (or null for unlabelled test),
-    "round": int,                 # which message round (1-indexed)
-    "formatted_text": str,        # [MSG] [USER] TARGET/CONTEXT ... string
-    "num_target_msgs": int,       # how many target messages seen so far
-    "num_total_msgs": int,        # total messages seen so far
-  }
-
-The formatted_text follows the paper's schema:
-  [MSG] [USER] TARGET <text> [MSG] [USER] CONTEXT <text> ...
-
-Output: data/preprocessed.jsonl  (one JSON object per line)
-"""
-
 import json
 import os
 import re
@@ -29,7 +5,7 @@ import sys
 import sys; sys.stdout.reconfigure(encoding="utf-8", errors="replace") if hasattr(sys.stdout, "reconfigure") else None
 from pathlib import Path
 from typing import Optional
-
+from collections import deque
 import yaml
 from tqdm import tqdm
 
@@ -38,13 +14,13 @@ CFG_PATH = Path(__file__).parent / "config.yaml"
 with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
 
-DATA_DIR       = Path(CFG["paths"]["data_dir"])
-GT_FILE        = Path(CFG["paths"]["ground_truth"])
-OUT_FILE       = Path(CFG["paths"]["preprocessed"])
-MAX_CTX_MSGS   = CFG["preprocessing"]["max_context_messages"]
-REMOVE_URLS    = CFG["preprocessing"]["remove_urls"]
-REMOVE_BRACKETS= CFG["preprocessing"]["remove_brackets"]
-ANONYMIZE      = CFG["preprocessing"]["anonymize_users"]
+DATA_DIR = Path(CFG["paths"]["data_dir"])
+GT_FILE = Path(CFG["paths"]["ground_truth"])
+OUT_FILE = Path(CFG["paths"]["preprocessed"])
+MAX_CTX_MSGS = CFG["preprocessing"]["max_context_messages"]
+REMOVE_URLS = CFG["preprocessing"]["remove_urls"]
+REMOVE_BRACKETS = CFG["preprocessing"]["remove_brackets"]
+ANONYMIZE = CFG["preprocessing"]["anonymize_users"]
 
 Out_FILE_parent = OUT_FILE.parent
 Out_FILE_parent.mkdir(parents=True, exist_ok=True)
@@ -111,15 +87,7 @@ def is_target(node: dict, target_id: str) -> bool:
     return node.get("target") is True
 
 
-# ── Core: Build chronological message list for one thread ──────────────────────
-
 def build_message_sequence(record: dict, target_id: str) -> list[dict]:
-    """
-    Flatten submission + comments into a chronological list of messages,
-    each annotated with whether it is from the target subject.
-
-    Returns: list of dicts with keys: type, author, text, date, is_target
-    """
     messages = []
 
     sub = record.get("submission", {})
@@ -167,17 +135,7 @@ def build_message_sequence(record: dict, target_id: str) -> list[dict]:
     return messages
 
 
-# ── Core: Format a window of messages into the [MSG] schema ──────────────────
-
 def format_conversation_window(messages: list[dict]) -> str:
-    """
-    Convert a list of message dicts into the structured string:
-      [MSG] [USER] TARGET <text> [MSG] [USER] CONTEXT <text> ...
-
-    Keeps up to MAX_CTX_MSGS messages total to avoid blowing the token budget.
-    If the window is longer, we keep the most recent MAX_CTX_MSGS messages
-    but always include all TARGET messages.
-    """
     if not messages:
         return ""
 
@@ -203,8 +161,6 @@ def format_conversation_window(messages: list[dict]) -> str:
     return " ".join(parts)
 
 
-# ── Main Processing ────────────────────────────────────────────────────────────
-
 def load_ground_truth(gt_path: Path) -> dict[str, int]:
     labels = {}
     if not gt_path.exists():
@@ -223,18 +179,12 @@ def load_ground_truth(gt_path: Path) -> dict[str, int]:
 
 
 def infer_target_id(record: dict) -> Optional[str]:
-    """
-    Best-effort: find the target subject ID for a thread record.
-    The README says targetSubject field; fall back to scanning for target=True.
-    """
     sub = record.get("submission", {})
 
-    # Explicit field
     explicit = get_submission_target(sub)
     if explicit:
         return explicit
 
-    # submission itself is flagged target
     if sub.get("target") is True:
         return get_submission_author(sub)
 
@@ -244,9 +194,6 @@ def infer_target_id(record: dict) -> Optional[str]:
             return get_comment_author(c)
 
     return None
-
-from collections import deque
-from typing import Optional
 
 
 MAX_TARGET_MSGS = CFG["preprocessing"].get("max_target_messages", 20)
@@ -272,10 +219,6 @@ def format_fast_window(
     target_buffer: deque,
     context_buffer: deque,
 ) -> str:
-    """
-    Build a compact conversation window from recent target and context messages.
-    Much faster than scanning the full previous history every time.
-    """
     window = list(target_buffer) + list(context_buffer)
     window.sort(key=lambda m: m["date"])
 
@@ -283,18 +226,9 @@ def format_fast_window(
 
 
 def process_all_records(records: list[dict], labels: dict[str, int]) -> list[dict]:
-    """
-    Efficient preprocessing for eRisk Task 2.
-
-    Main idea:
-    - group threads by target subject
-    - merge messages chronologically
-    - maintain rolling target/context buffers
-    - emit one example only when the target user writes
-    """
     subject_threads: dict[str, list[list[dict]]] = {}
 
-    print("[PREPROCESS] Grouping threads by subject...")
+    print("[PREPROCESS] Grouping threads by subject")
 
     for record in records:
         target_id = infer_target_id(record)
@@ -309,7 +243,7 @@ def process_all_records(records: list[dict], labels: dict[str, int]) -> list[dic
 
     examples = []
 
-    print("[PREPROCESS] Creating incremental examples...")
+    print("[PREPROCESS] Creating incremental examples")
 
     for subject_id, all_thread_msgs in tqdm(subject_threads.items(), desc="Subjects"):
         label = labels.get(subject_id)
@@ -369,12 +303,14 @@ def process_all_records(records: list[dict], labels: dict[str, int]) -> list[dic
             examples.extend(emitted_for_subject)
 
     return examples
+
+
 def main():
-    print(f"[PREPROCESS] Loading ground truth from {GT_FILE} ...")
+    print(f"[PREPROCESS] Loading ground truth from {GT_FILE}")
     labels = load_ground_truth(GT_FILE)
     print(f"[PREPROCESS] {len(labels)} labelled subjects.")
 
-    print(f"[PREPROCESS] Scanning {DATA_DIR} for JSON files ...")
+    print(f"[PREPROCESS] Scanning {DATA_DIR} for JSON files")
     json_files = sorted(DATA_DIR.glob("*.json"))
     if not json_files:
         sys.exit(f"[ERROR] No .json files found in {DATA_DIR}.")
@@ -392,10 +328,10 @@ def main():
             except json.JSONDecodeError as e:
                 print(f"  [WARN] Skipping {jf.name}: {e}")
 
-    print(f"[PREPROCESS] Loaded {len(all_records)} thread records. Processing ...")
+    print(f"[PREPROCESS] Loaded {len(all_records)} thread records. Processing")
     examples = process_all_records(all_records, labels)
 
-    print(f"[PREPROCESS] Writing {len(examples)} examples to {OUT_FILE} ...")
+    print(f"[PREPROCESS] Writing {len(examples)} examples to {OUT_FILE}")
     with open(OUT_FILE, "w", encoding="utf-8", errors="replace") as out:
         for ex in examples:
             out.write(json.dumps(ex, ensure_ascii=False) + "\n")
@@ -407,12 +343,12 @@ def main():
     subjects   = len(set(e["subject_id"] for e in examples))
 
     print(f"\n[PREPROCESS] Done.")
-    print(f"  Total examples  : {len(examples)}")
-    print(f"  Unique subjects : {subjects}")
-    print(f"  Labelled exs    : {len(labelled)}")
-    print(f"    Positive      : {len(positives)}")
-    print(f"    Negative      : {len(negatives)}")
-    print(f"  Output          : {OUT_FILE}")
+    print(f"Total examples: {len(examples)}")
+    print(f"Unique subjects: {subjects}")
+    print(f"Labelled exs: {len(labelled)}")
+    print(f"Positive: {len(positives)}")
+    print(f"Negative: {len(negatives)}")
+    print(f"Output: {OUT_FILE}")
 
 
 if __name__ == "__main__":

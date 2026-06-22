@@ -1,5 +1,5 @@
 # =============================================================================
-# eRisk 2025 Task 2 — Central Configuration
+# eRisk 2025 Task 2 - Central Configuration
 # Edit paths and hyperparameters here; all scripts read this file.
 # =============================================================================
 
@@ -64,7 +64,7 @@ training:
   dataloader_num_workers: 2
 
 # ---------------------------------------------------------------------------
-# Hyperparameter search (Optuna) — used by 04_train.py --search
+# Hyperparameter search (Optuna) - used by 04_train.py --search
 # ---------------------------------------------------------------------------
 optuna:
   n_trials: 20

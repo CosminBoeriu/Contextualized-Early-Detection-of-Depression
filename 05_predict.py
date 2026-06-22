@@ -1,26 +1,3 @@
-#!/usr/bin/env python3
-"""
-05_predict.py
--------------
-Sequential / early-detection inference for eRisk Task 2.
-
-For each subject, we feed conversation windows in chronological order
-(one per target-user round) and fire a prediction the first time the model's
-P(positive) crosses the confidence_threshold set in config.yaml.
-
-IMPORTANT:
-This script should run on the validation-all-rounds file, not on the full
-preprocessed dataset and not on val.jsonl.
-
-Correct input:
-    outputs/val_all_rounds.jsonl
-
-Outputs:
-    outputs/predictions_decision.txt
-    outputs/predictions_ranking.txt
-    outputs/predictions_full.json
-"""
-
 import argparse
 import json
 import sys
@@ -34,15 +11,11 @@ from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 
-# ── Config ────────────────────────────────────────────────────────────────────
-
 CFG_PATH = Path(__file__).parent / "config.yaml"
 
 with open(CFG_PATH, encoding="utf-8", errors="replace") as f:
     CFG = yaml.safe_load(f)
 
-# Prefer val_all_rounds_file if it exists in config.yaml.
-# Otherwise fall back to outputs/val_all_rounds.jsonl.
 PREPROCESSED = Path(
     CFG["paths"].get(
         "val_all_rounds_file",
@@ -65,7 +38,6 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-# ── Dataset ───────────────────────────────────────────────────────────────────
 
 class SingleTextDataset(Dataset):
     def __init__(self, texts: list[str], tokenizer, max_length: int):
@@ -84,12 +56,7 @@ class SingleTextDataset(Dataset):
         return {k: v[idx] for k, v in self.encodings.items()}
 
 
-# ── Model loading ─────────────────────────────────────────────────────────────
-
 def load_model_and_tokenizer(model_path: str):
-    """
-    Load the fine-tuned model from disk.
-    """
     print(f"[PREDICT] Loading model from {model_path} ...")
     print(f"[PREDICT] Device: {DEVICE}")
 
@@ -104,9 +71,6 @@ def load_model_and_tokenizer(model_path: str):
 
 @torch.no_grad()
 def score_batch(texts: list[str], model, tokenizer) -> list[float]:
-    """
-    Return P(positive/depression) for a list of texts.
-    """
     ds = SingleTextDataset(texts, tokenizer, MAX_LENGTH)
     loader = DataLoader(ds, batch_size=INFER_BS, shuffle=False)
 
@@ -121,17 +85,7 @@ def score_batch(texts: list[str], model, tokenizer) -> list[float]:
     return scores
 
 
-# ── Load examples grouped by subject ──────────────────────────────────────────
-
 def load_and_group(preprocessed_path: Path) -> dict[str, list[dict]]:
-    """
-    Load a JSONL file and group examples by subject_id.
-
-    Expected input:
-        outputs/val_all_rounds.jsonl
-
-    Each subject should have multiple chronological rounds.
-    """
     from collections import defaultdict
 
     groups: dict[str, list[dict]] = defaultdict(list)
@@ -139,8 +93,6 @@ def load_and_group(preprocessed_path: Path) -> dict[str, list[dict]]:
     if not preprocessed_path.exists():
         sys.exit(
             f"[ERROR] {preprocessed_path} not found.\n"
-            "You probably need to create outputs/val_all_rounds.jsonl in 03_prepare_training.py.\n"
-            "Do NOT use outputs/val.jsonl for early detection, because it usually contains only the final round."
         )
 
     with open(preprocessed_path, encoding="utf-8", errors="replace") as f:
@@ -172,25 +124,6 @@ def run_early_detection(
     min_msgs: int,
     score_every: bool,
 ) -> list[dict]:
-    """
-    Sequentially process each subject's rounds.
-
-    The system predicts depression as soon as:
-        score >= threshold
-
-    If the threshold is never crossed, it predicts control at the final round.
-
-    Important bug fix:
-        num_total_rounds must be the real final target round:
-            rounds[-1]["round"]
-
-        NOT:
-            len(rounds)
-
-        because if you use milestone examples, len(rounds) can be much smaller
-        than the actual final round number.
-    """
-
     results = []
 
     def should_score(ex: dict, prev_target_count: int) -> bool:
@@ -208,19 +141,12 @@ def run_early_detection(
             continue
 
         true_label = rounds[-1].get("label")
-
-        # Correct total number of rounds.
-        # This is the final target-user round number.
         total_rounds = int(rounds[-1]["round"])
-
-        # Total number of target messages seen by the last available round.
         total_target = int(rounds[-1].get("num_target_msgs", total_rounds))
 
         fired = False
         final_score = 0.0
         final_pred = 0
-
-        # Default decision is at the final real round, not len(rounds).
         decision_round = total_rounds
 
         prev_target_count = 0
@@ -231,8 +157,6 @@ def run_early_detection(
                 continue
 
             prev_target_count = ex["num_target_msgs"]
-
-            # Do not decide too early if min_msgs is configured.
             if ex["num_total_msgs"] < min_msgs:
                 continue
 
@@ -244,13 +168,10 @@ def run_early_detection(
                 final_pred = 1
                 decision_round = int(ex["round"])
                 break
-
-        # If the model never crossed threshold, predict control at the end.
         if not fired:
             final_pred = 1 if final_score >= threshold else 0
             decision_round = total_rounds
 
-        # Safety clamp: decision_round should never exceed total_rounds.
         # This prevents negative speed/latency bugs.
         if decision_round > total_rounds:
             decision_round = total_rounds
@@ -271,13 +192,7 @@ def run_early_detection(
     return results
 
 
-# ── Write outputs ─────────────────────────────────────────────────────────────
-
 def write_outputs(results: list[dict], out_dir: Path):
-    """
-    Save prediction outputs in TXT and JSON format.
-    """
-
     decision_txt = out_dir / "predictions_decision.txt"
 
     with open(decision_txt, "w", encoding="utf-8", errors="replace") as f:
@@ -332,8 +247,6 @@ def write_outputs(results: list[dict], out_dir: Path):
         print(f"  F1        : {f1:.3f}")
         print(f"  Avg decision round : {avg_round:.1f}")
 
-
-# ── CLI ───────────────────────────────────────────────────────────────────────
 
 def parse_args():
     p = argparse.ArgumentParser(description="Sequential early-detection inference")

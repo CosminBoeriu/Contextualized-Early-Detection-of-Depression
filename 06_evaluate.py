@@ -1,24 +1,3 @@
-#!/usr/bin/env python3
-"""
-06_evaluate.py
---------------
-Full eRisk Task 2 evaluation suite.
-
-Metrics implemented:
-  ┌──────────────┬─────────────────────────────────────────────────────────┐
-  │ ERDE(o)      │ Early Risk Detection Error (penalises late decisions)    │
-  │ Flatency     │ F1 weighted by speed (latency-penalised F1)              │
-  │ P, R, F1     │ Standard decision metrics                               │
-  │ latencyT     │ Normalised latency (messages to decision / total msgs)   │
-  │ speed        │ 1 - latencyT                                             │
-  │ P@k, NDCG@k  │ Ranking metrics at k=10 and k=100                       │
-  └──────────────┴─────────────────────────────────────────────────────────┘
-
-Usage:
-  python scripts/06_evaluate.py
-  python scripts/06_evaluate.py --preds outputs/predictions_full.json
-"""
-
 import argparse
 import json
 import math
@@ -46,12 +25,8 @@ NDCG_CUTOFFS = CFG["evaluation"]["ndcg_cutoffs"]
 P_AT_K       = CFG["evaluation"]["p_at_k"]
 
 
-# ── ERDE ──────────────────────────────────────────────────────────────────────
-
 def lc(delay: int, o: int) -> float:
-    """Stable latency cost function for ERDE."""
     x = delay - o
-
     if x >= 50:
         return 1.0
 
@@ -62,18 +37,6 @@ def lc(delay: int, o: int) -> float:
 
 
 def erde(results: list[dict], o: int) -> float:
-    """
-    ERDE(o): Early Risk Detection Error with delay penalty o.
-
-    For positive subjects:
-      cost = lc(delay, o)          if correctly identified
-      cost = 1.0                   if missed (false negative)
-    For negative subjects:
-      cost = c_fp * 1.0            if wrongly identified (false positive)
-      cost = 0.0                   if correctly rejected
-
-    c_fp is the false-positive penalty (standard eRisk: 0.5).
-    """
     C_FP      = 0.5
     costs     = []
     labelled  = [r for r in results if r["true_label"] is not None]
@@ -95,9 +58,6 @@ def erde(results: list[dict], o: int) -> float:
                 costs.append(0.0)   # correct rejection
 
     return sum(costs) / len(costs) if costs else 0.0
-
-
-# ── Flatency ──────────────────────────────────────────────────────────────────
 
 def flatency(results: list[dict]) -> tuple[float, float]:
     """
@@ -126,8 +86,6 @@ def flatency(results: list[dict]) -> tuple[float, float]:
 
     return flat, mean_latency
 
-
-# ── Ranking metrics (P@k, NDCG@k) ────────────────────────────────────────────
 
 def precision_at_k(sorted_results: list[dict], k: int) -> float:
     """P@k: fraction of top-k ranked subjects that are truly positive."""
@@ -162,12 +120,10 @@ def ranking_metrics(results: list[dict], k_vals: list[int]) -> dict[str, float]:
 
     out = {}
     for k in k_vals:
-        out[f"P@{k}"]    = precision_at_k(sorted_r, k)
+        out[f"P@{k}"] = precision_at_k(sorted_r, k)
         out[f"NDCG@{k}"] = ndcg_at_k(sorted_r, k)
     return out
 
-
-# ── Main Evaluation ───────────────────────────────────────────────────────────
 
 def evaluate(results: list[dict]) -> dict:
     labelled = [r for r in results if r["true_label"] is not None]
@@ -192,12 +148,12 @@ def evaluate(results: list[dict]) -> dict:
     rank_met = ranking_metrics(results, all_k)
 
     metrics = {
-        "num_subjects":  len(labelled),
-        "precision":     p,
-        "recall":        r,
-        "f1":            f1,
-        "flatency":      flat,
-        "mean_speed":    mean_speed,
+        "num_subjects": len(labelled),
+        "precision": p,
+        "recall": r,
+        "f1": f1,
+        "flatency": flat,
+        "mean_speed": mean_speed,
         "mean_latencyT": mean_lat,
         **erde_scores,
         **rank_met,
@@ -210,31 +166,26 @@ def print_report(metrics: dict, results: list[dict]):
     true  = [r["true_label"]      for r in labelled]
     preds = [r["predicted_label"] for r in labelled]
 
-    print("\n" + "=" * 60)
     print("  eRisk 2025 Task 2 - Evaluation Report")
-    print("=" * 60)
 
     print(f"\n  Subjects evaluated : {metrics.get('num_subjects', 0)}")
 
-    print("\n  ── Decision-Based Metrics ──────────────────────────────")
-    print(f"  Precision   : {metrics.get('precision', 0):.4f}")
-    print(f"  Recall      : {metrics.get('recall', 0):.4f}")
-    print(f"  F1          : {metrics.get('f1', 0):.4f}")
-    print(f"  Flatency    : {metrics.get('flatency', 0):.4f}")
-    print(f"  Mean speed  : {metrics.get('mean_speed', 0):.4f}")
+    print(f"  Precision : {metrics.get('precision', 0):.4f}")
+    print(f"  Recall: {metrics.get('recall', 0):.4f}")
+    print(f"  F1: {metrics.get('f1', 0):.4f}")
+    print(f"  Flatency: {metrics.get('flatency', 0):.4f}")
+    print(f"  Mean speed: {metrics.get('mean_speed', 0):.4f}")
     print(f"  Mean latency: {metrics.get('mean_latencyT', 0):.4f}")
 
     for o in ERDE_O_VALS:
         key = f"ERDE{o}"
         print(f"  {key:<12}: {metrics.get(key, 0):.4f}")
 
-    print("\n  ── Ranking Metrics ─────────────────────────────────────")
     for k in P_AT_K:
         print(f"  P@{k:<10}: {metrics.get(f'P@{k}', 0):.4f}")
     for k in NDCG_CUTOFFS:
         print(f"  NDCG@{k:<8}: {metrics.get(f'NDCG@{k}', 0):.4f}")
 
-    print("\n  ── Classification Report ───────────────────────────────")
     print(classification_report(true, preds,
                                 target_names=["Control", "Depression"],
                                 zero_division=0))
@@ -243,22 +194,17 @@ def print_report(metrics: dict, results: list[dict]):
     pos_results = [r for r in labelled if r["true_label"] == 1]
     if pos_results:
         rounds = [r["decision_round"] for r in pos_results]
-        print(f"  ── Decision Round Stats (positive subjects) ──────────")
         print(f"  Mean  : {np.mean(rounds):.1f}")
         print(f"  Median: {np.median(rounds):.1f}")
         print(f"  Min   : {min(rounds)}")
         print(f"  Max   : {max(rounds)}")
 
-    print("=" * 60 + "\n")
-
 
 def parse_args():
     p = argparse.ArgumentParser(description="Evaluate Task 2 predictions")
     default_preds = str(OUTPUT_DIR / "predictions_full.json")
-    p.add_argument("--preds", default=default_preds,
-                   help="Path to predictions_full.json from 05_predict.py")
-    p.add_argument("--out",   default=str(OUTPUT_DIR / "evaluation_results.json"),
-                   help="Where to save the JSON results summary")
+    p.add_argument("--preds", default=default_preds, help="Path to predictions_full.json from 05_predict.py")
+    p.add_argument("--out",   default=str(OUTPUT_DIR / "evaluation_results.json"), help="Where to save the JSON results summary")
     return p.parse_args()
 
 

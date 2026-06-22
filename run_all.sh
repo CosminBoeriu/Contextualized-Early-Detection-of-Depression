@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run_all.sh — Execute the full eRisk Task 2 pipeline end-to-end.
+# run_all.sh - Execute the full eRisk Task 2 pipeline end-to-end.
 # Usage: bash run_all.sh [--skip-train] [--search]
 #
 # Steps:
@@ -27,7 +27,7 @@ LOG_DIR="logs"
 mkdir -p "$LOG_DIR"
 
 echo "================================================================"
-echo "  eRisk 2025 Task 2 — Full Pipeline"
+echo "  eRisk 2025 Task 2 - Full Pipeline"
 echo "================================================================"
 
 echo ""

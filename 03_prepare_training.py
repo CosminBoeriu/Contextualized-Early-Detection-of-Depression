@@ -1,20 +1,3 @@
-#!/usr/bin/env python3
-"""
-03_prepare_training.py
-----------------------
-Split the preprocessed JSONL into train / val sets.
-
-IMPORTANT: The split is done at the SUBJECT level (not example level) to
-avoid data leakage - all rounds from the same subject go into the same
-partition. Stratification preserves the class ratio.
-
-For training we use the LAST conversation window for each subject
-(maximum context), but optionally all intermediate windows can also be
-included for data augmentation.
-
-Outputs: data/train.jsonl, data/val.jsonl
-"""
-
 import json
 import random
 import sys
@@ -25,24 +8,20 @@ from pathlib import Path
 import yaml
 from sklearn.model_selection import train_test_split
 
-# ── Config ────────────────────────────────────────────────────────────────────
 CFG_PATH = Path(__file__).parent / "config.yaml"
 with open(CFG_PATH, encoding='utf-8', errors='replace') as f:
     CFG = yaml.safe_load(f)
 
-IN_FILE    = Path(CFG["paths"]["preprocessed"])
+IN_FILE = Path(CFG["paths"]["preprocessed"])
 TRAIN_FILE = Path(CFG["paths"]["train_file"])
-VAL_FILE   = Path(CFG["paths"]["val_file"])
-VAL_SIZE   = CFG["split"]["val_size"]
-SEED       = CFG["split"]["random_seed"]
-STRATIFY   = CFG["split"]["stratify"]
+VAL_FILE = Path(CFG["paths"]["val_file"])
+VAL_SIZE = CFG["split"]["val_size"]
+SEED = CFG["split"]["random_seed"]
+STRATIFY = CFG["split"]["stratify"]
 
 random.seed(SEED)
 
 TRAIN_FILE.parent.mkdir(parents=True, exist_ok=True)
-
-
-# ── Load preprocessed examples ────────────────────────────────────────────────
 
 def load_jsonl(path: Path) -> list[dict]:
     if not path.exists():
@@ -55,9 +34,6 @@ def load_jsonl(path: Path) -> list[dict]:
                 examples.append(json.loads(line))
     return examples
 
-
-# ── Group by subject ──────────────────────────────────────────────────────────
-
 def group_by_subject(examples: list[dict]) -> dict[str, list[dict]]:
     groups: dict[str, list[dict]] = defaultdict(list)
     for ex in examples:
@@ -68,17 +44,10 @@ def group_by_subject(examples: list[dict]) -> dict[str, list[dict]]:
     return groups
 
 
-# ── Strategy: which examples to use for training ──────────────────────────────
-
 def select_training_examples(
     subject_examples: list[dict],
     strategy: str = "last_only",
 ) -> list[dict]:
-    """
-    'last_only'  - use only the final window (max context); fast but low data volume
-    'all_rounds' - use every intermediate window (data augmentation; may overfit)
-    'milestone'  - use windows at rounds 1, 10, 50, 100, 200, last
-    """
     if strategy == "last_only":
         return [subject_examples[-1]]
 
@@ -102,13 +71,8 @@ def select_training_examples(
         raise ValueError(f"Unknown strategy: {strategy}")
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
-
 def main():
-    # Choose how much context to include in training examples.
-    # "all_rounds"  = richest data; good for small datasets.
-    # "last_only"   = cleanest; avoids seeing many near-duplicate examples.
-    TRAIN_STRATEGY = "all_rounds"   # <- change here if desired
+    TRAIN_STRATEGY = "all_rounds"
 
     print(f"[SPLIT] Loading {IN_FILE} ...")
     examples = load_jsonl(IN_FILE)
@@ -128,7 +92,6 @@ def main():
     print(f"[SPLIT] {len(subject_ids)} labelled subjects "
           f"(pos={pos_count}, neg={neg_count})")
 
-    # Subject-level train / val split
     stratify_arg = subject_labels if STRATIFY else None
     train_sids, val_sids = train_test_split(
         subject_ids,
@@ -138,20 +101,16 @@ def main():
     )
     print(f"[SPLIT] Train subjects: {len(train_sids)} | Val subjects: {len(val_sids)}")
 
-    # Expand subjects -> examples using chosen strategy
     train_examples = []
     for sid in train_sids:
         train_examples.extend(select_training_examples(by_subject[sid], TRAIN_STRATEGY))
 
     val_examples = []
     for sid in val_sids:
-        # For validation always use the last (most complete) window
         val_examples.extend(select_training_examples(by_subject[sid], "last_only"))
 
-    # Shuffle training examples (not val - we may want ordered eval)
     random.shuffle(train_examples)
 
-    # Write output
     def write_jsonl(path: Path, data: list[dict]):
         with open(path, "w", encoding='utf-8', errors='replace') as f:
             for ex in data:
@@ -163,8 +122,8 @@ def main():
     # Stats
     train_pos = sum(e["label"] == 1 for e in train_examples)
     train_neg = sum(e["label"] == 0 for e in train_examples)
-    val_pos   = sum(e["label"] == 1 for e in val_examples)
-    val_neg   = sum(e["label"] == 0 for e in val_examples)
+    val_pos = sum(e["label"] == 1 for e in val_examples)
+    val_neg = sum(e["label"] == 0 for e in val_examples)
 
     print(f"\n[SPLIT] Training set  : {len(train_examples)} examples "
           f"(pos={train_pos}, neg={train_neg})")
@@ -173,10 +132,8 @@ def main():
     print(f"[SPLIT] Strategy      : {TRAIN_STRATEGY}")
     print(f"[SPLIT] Saved to {TRAIN_FILE} and {VAL_FILE}")
 
-    # Also write the unlabelled test subjects for inference
     test_subjects_file = Path(CFG["paths"]["preprocessed"]).parent / "test_subjects.jsonl"
     if unlabelled:
-        # For test: keep the last window per subject (full context)
         test_by_subject = group_by_subject(unlabelled)
         test_examples   = [grp[-1] for grp in test_by_subject.values()]
         write_jsonl(test_subjects_file, test_examples)
