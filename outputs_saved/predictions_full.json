@@ -1,0 +1,1235 @@
+[
+  {
+    "subject_id": "subject_dkzABZg",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0001543923863209784,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 1916
+  },
+  {
+    "subject_id": "subject_33xGSOO",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.9997987151145935,
+    "decision_round": 43,
+    "num_total_rounds": 1,
+    "total_target_msgs": 43
+  },
+  {
+    "subject_id": "subject_BU55rP6",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00026068356237374246,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 231
+  },
+  {
+    "subject_id": "subject_detOfJ3",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003259953809902072,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 19
+  },
+  {
+    "subject_id": "subject_zPhoO0p",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.059795185923576355,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_HrFgNYi",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.92920104181394e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 799
+  },
+  {
+    "subject_id": "subject_mFA2bfZ",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00015515788982156664,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 157
+  },
+  {
+    "subject_id": "subject_278sMQF",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003585354133974761,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 21
+  },
+  {
+    "subject_id": "subject_fL0XRg2",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0412067174911499,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 174
+  },
+  {
+    "subject_id": "subject_pOOldxn",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.9997854828834534,
+    "decision_round": 69,
+    "num_total_rounds": 1,
+    "total_target_msgs": 69
+  },
+  {
+    "subject_id": "subject_Cx6IMLM",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0002647250657901168,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 809
+  },
+  {
+    "subject_id": "subject_MZbQWOP",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.005573975387960672,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 231
+  },
+  {
+    "subject_id": "subject_wib573W",
+    "true_label": 1,
+    "predicted_label": 0,
+    "score": 0.015184711664915085,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 1024
+  },
+  {
+    "subject_id": "subject_Ai1Dt2N",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.002998441457748413,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 55
+  },
+  {
+    "subject_id": "subject_Nr6kWpt",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00047355453716591,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 44
+  },
+  {
+    "subject_id": "subject_1osZtEv",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00022053823340684175,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 155
+  },
+  {
+    "subject_id": "subject_5pFBdd5",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0020994453225284815,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 42
+  },
+  {
+    "subject_id": "subject_NvgHXyI",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.9824303388595581,
+    "decision_round": 1095,
+    "num_total_rounds": 1,
+    "total_target_msgs": 1095
+  },
+  {
+    "subject_id": "subject_VlSu4K6",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003173414443153888,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 1034
+  },
+  {
+    "subject_id": "subject_A5caZ5y",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.9966200590133667,
+    "decision_round": 507,
+    "num_total_rounds": 1,
+    "total_target_msgs": 507
+  },
+  {
+    "subject_id": "subject_x6ICcXu",
+    "true_label": 1,
+    "predicted_label": 0,
+    "score": 0.00013888475950807333,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 3086
+  },
+  {
+    "subject_id": "subject_u3FCDyn",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0016692024655640125,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 76
+  },
+  {
+    "subject_id": "subject_ohNY7ve",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 8.046478615142405e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 365
+  },
+  {
+    "subject_id": "subject_UDAj5iP",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.9997723698616028,
+    "decision_round": 11,
+    "num_total_rounds": 1,
+    "total_target_msgs": 11
+  },
+  {
+    "subject_id": "subject_2DihWGa",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003372661885805428,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 268
+  },
+  {
+    "subject_id": "subject_yXctp2M",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00010345123882871121,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 57
+  },
+  {
+    "subject_id": "subject_v4QoYLZ",
+    "true_label": 0,
+    "predicted_label": 1,
+    "score": 0.9508900046348572,
+    "decision_round": 28,
+    "num_total_rounds": 1,
+    "total_target_msgs": 28
+  },
+  {
+    "subject_id": "subject_bb5YGce",
+    "true_label": 1,
+    "predicted_label": 0,
+    "score": 0.11029699444770813,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 436
+  },
+  {
+    "subject_id": "subject_qGEiSdI",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00017518542881589383,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 994
+  },
+  {
+    "subject_id": "subject_TEql9Bg",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0001255446986760944,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 51
+  },
+  {
+    "subject_id": "subject_k2lyhoI",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.37484291195869446,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 796
+  },
+  {
+    "subject_id": "subject_upRn0Mu",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0004678359837271273,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 181
+  },
+  {
+    "subject_id": "subject_vNWHsk7",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 6.962965562706813e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 806
+  },
+  {
+    "subject_id": "subject_gmbhAOm",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00010529514838708565,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 801
+  },
+  {
+    "subject_id": "subject_05DR7kW",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0009697778732515872,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 849
+  },
+  {
+    "subject_id": "subject_0sOkMfd",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.001217565150000155,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 123
+  },
+  {
+    "subject_id": "subject_KbucbtO",
+    "true_label": 1,
+    "predicted_label": 0,
+    "score": 6.819852569606155e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 127
+  },
+  {
+    "subject_id": "subject_DF84owD",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00013176527863834053,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 22
+  },
+  {
+    "subject_id": "subject_JtFkbLG",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00017868024588096887,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 34
+  },
+  {
+    "subject_id": "subject_lbOpJeO",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0014775115996599197,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 336
+  },
+  {
+    "subject_id": "subject_LLeoV00",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00012792498455382884,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 38
+  },
+  {
+    "subject_id": "subject_bUKx9WJ",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00026352558052167296,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 556
+  },
+  {
+    "subject_id": "subject_0S4P42P",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003580159100238234,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 101
+  },
+  {
+    "subject_id": "subject_5DCMTyE",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003130079712718725,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 897
+  },
+  {
+    "subject_id": "subject_9kwE14l",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00013701908756047487,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 102
+  },
+  {
+    "subject_id": "subject_723Iyp0",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.17599967122077942,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 11
+  },
+  {
+    "subject_id": "subject_ZuMfnNI",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0004681037971749902,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 49
+  },
+  {
+    "subject_id": "subject_NgmoKyS",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00014294944412540644,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 19
+  },
+  {
+    "subject_id": "subject_F5vuDxw",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 7.173934136517346e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 1000
+  },
+  {
+    "subject_id": "subject_FLgvR9J",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00011701558833010495,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 17
+  },
+  {
+    "subject_id": "subject_2U4fiVH",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.43710474530235e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 216
+  },
+  {
+    "subject_id": "subject_7lBN8G9",
+    "true_label": 0,
+    "predicted_label": 1,
+    "score": 0.9997206330299377,
+    "decision_round": 29,
+    "num_total_rounds": 1,
+    "total_target_msgs": 29
+  },
+  {
+    "subject_id": "subject_Rn7AVWi",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00012653307931032032,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 341
+  },
+  {
+    "subject_id": "subject_7C8ZIvd",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0014020083472132683,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 685
+  },
+  {
+    "subject_id": "subject_ru95qfP",
+    "true_label": 0,
+    "predicted_label": 1,
+    "score": 0.9654053449630737,
+    "decision_round": 800,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_XS9IT39",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.028660088777542114,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 31
+  },
+  {
+    "subject_id": "subject_5ZUQs6o",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.000792672042734921,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 133
+  },
+  {
+    "subject_id": "subject_UxJI7yM",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.000706174410879612,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 109
+  },
+  {
+    "subject_id": "subject_InIDbwg",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00018674871535040438,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 70
+  },
+  {
+    "subject_id": "subject_MlD8zSg",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00011097999959019944,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_k8nykSa",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00014770629059057683,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 772
+  },
+  {
+    "subject_id": "subject_ASeAWq2",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00011689960956573486,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 104
+  },
+  {
+    "subject_id": "subject_hxc2Sft",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003352155617903918,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 10
+  },
+  {
+    "subject_id": "subject_ATovd7g",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.541610052110627e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 799
+  },
+  {
+    "subject_id": "subject_gC19vrR",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.01255284994840622,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 359
+  },
+  {
+    "subject_id": "subject_4UameTU",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0002539374108891934,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 32
+  },
+  {
+    "subject_id": "subject_WUg6meq",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00012883490126114339,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 21
+  },
+  {
+    "subject_id": "subject_ZCzlOPF",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003849674540106207,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 18
+  },
+  {
+    "subject_id": "subject_EBAWbfX",
+    "true_label": 0,
+    "predicted_label": 1,
+    "score": 0.9997373223304749,
+    "decision_round": 1020,
+    "num_total_rounds": 1,
+    "total_target_msgs": 1020
+  },
+  {
+    "subject_id": "subject_CxoXY3B",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00015455631364602596,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 335
+  },
+  {
+    "subject_id": "subject_neAcP6t",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 8.00220514065586e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_vM6IkGQ",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 7.151606405386701e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_D4bPtGO",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.9852378964424133,
+    "decision_round": 553,
+    "num_total_rounds": 1,
+    "total_target_msgs": 553
+  },
+  {
+    "subject_id": "subject_o7vfPFK",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0004153333720751107,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 554
+  },
+  {
+    "subject_id": "subject_d0SJhHU",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 6.27294575679116e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 19
+  },
+  {
+    "subject_id": "subject_JQkHULC",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00021299657237250358,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 26
+  },
+  {
+    "subject_id": "subject_dWHR4wS",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00013027644308749586,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 804
+  },
+  {
+    "subject_id": "subject_o51KbEu",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003107046941295266,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 665
+  },
+  {
+    "subject_id": "subject_IKqW7l7",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.005147248040884733,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 47
+  },
+  {
+    "subject_id": "subject_k0KGZWp",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.590402623871341e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 80
+  },
+  {
+    "subject_id": "subject_n5J5oFP",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00012117769801989198,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_gfzUAij",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.9998396635055542,
+    "decision_round": 28,
+    "num_total_rounds": 1,
+    "total_target_msgs": 28
+  },
+  {
+    "subject_id": "subject_EvI0N0G",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0001395572762703523,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 802
+  },
+  {
+    "subject_id": "subject_KbXsErc",
+    "true_label": 1,
+    "predicted_label": 0,
+    "score": 0.005070819985121489,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 683
+  },
+  {
+    "subject_id": "subject_sejDtmB",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00015328385052271187,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 804
+  },
+  {
+    "subject_id": "subject_NQpu2Tq",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00014070562610868365,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 274
+  },
+  {
+    "subject_id": "subject_fAZiwMu",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00010357274004491046,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 810
+  },
+  {
+    "subject_id": "subject_Gc2SHOA",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00012411453644745052,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_1cEzxNF",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00011416112101869658,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 801
+  },
+  {
+    "subject_id": "subject_YHXmbWx",
+    "true_label": 0,
+    "predicted_label": 1,
+    "score": 0.999852180480957,
+    "decision_round": 798,
+    "num_total_rounds": 1,
+    "total_target_msgs": 798
+  },
+  {
+    "subject_id": "subject_mUjUefZ",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00013036205200478435,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 802
+  },
+  {
+    "subject_id": "subject_l3CKJme",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0001249592169187963,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 359
+  },
+  {
+    "subject_id": "subject_IdEqdqu",
+    "true_label": 0,
+    "predicted_label": 1,
+    "score": 0.996415376663208,
+    "decision_round": 72,
+    "num_total_rounds": 1,
+    "total_target_msgs": 72
+  },
+  {
+    "subject_id": "subject_9O6gZ49",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.449703065911308e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 420
+  },
+  {
+    "subject_id": "subject_u95nWFr",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00022347962658386678,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 12
+  },
+  {
+    "subject_id": "subject_QC3EHiq",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00013558656792156398,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 799
+  },
+  {
+    "subject_id": "subject_8yGRW4f",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00023269682424142957,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 885
+  },
+  {
+    "subject_id": "subject_8jukIc2",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 6.997805758146569e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_3sASSQC",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00016854987188708037,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_gex8vqJ",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0002133449597749859,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 143
+  },
+  {
+    "subject_id": "subject_qHlM8lJ",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0007731878431513906,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_mkX0fHn",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00010824963101185858,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 16
+  },
+  {
+    "subject_id": "subject_lrgOTib",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00017626026237849146,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 136
+  },
+  {
+    "subject_id": "subject_qk3mz2N",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00011202891619177535,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 793
+  },
+  {
+    "subject_id": "subject_vyWS6Ds",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.331600449513644e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_Y6TvGP7",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.221328946296126e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 148
+  },
+  {
+    "subject_id": "subject_Hw5bKQ4",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00010909398406511173,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 235
+  },
+  {
+    "subject_id": "subject_o0t4uoO",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00022213849297259003,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 131
+  },
+  {
+    "subject_id": "subject_qeSuCFM",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00011799951607827097,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 25
+  },
+  {
+    "subject_id": "subject_kpzE85t",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0003104529750999063,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 92
+  },
+  {
+    "subject_id": "subject_mf7qrdS",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.000198485839064233,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 79
+  },
+  {
+    "subject_id": "subject_c5EtMxd",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0010524995159357786,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 798
+  },
+  {
+    "subject_id": "subject_BqOFhzO",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.032025210559368134,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 904
+  },
+  {
+    "subject_id": "subject_QgR4dTK",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0005012189503759146,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 203
+  },
+  {
+    "subject_id": "subject_jMflBhD",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0005023807752877474,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 22
+  },
+  {
+    "subject_id": "subject_z1sGrjq",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.9996547698974609,
+    "decision_round": 880,
+    "num_total_rounds": 1,
+    "total_target_msgs": 880
+  },
+  {
+    "subject_id": "subject_B3fzctd",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0007213331991806626,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 31
+  },
+  {
+    "subject_id": "subject_gZaVu7Z",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00032492057653144,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 50
+  },
+  {
+    "subject_id": "subject_oqppp7T",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00012858868285547942,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 168
+  },
+  {
+    "subject_id": "subject_5RqNeKX",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 7.726198964519426e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 671
+  },
+  {
+    "subject_id": "subject_MokShR1",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0002876836515497416,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 93
+  },
+  {
+    "subject_id": "subject_QhgXkYI",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.020736096426844597,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 832
+  },
+  {
+    "subject_id": "subject_HAOHBQo",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0001034411761793308,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 256
+  },
+  {
+    "subject_id": "subject_jI0suAT",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00027885602321475744,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 814
+  },
+  {
+    "subject_id": "subject_iJfcfgE",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0002426442806608975,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 42
+  },
+  {
+    "subject_id": "subject_kbTdjWy",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.18721198104322e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 800
+  },
+  {
+    "subject_id": "subject_MM8MgZd",
+    "true_label": 0,
+    "predicted_label": 1,
+    "score": 0.9997664093971252,
+    "decision_round": 192,
+    "num_total_rounds": 1,
+    "total_target_msgs": 192
+  },
+  {
+    "subject_id": "subject_xzWtOuK",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.8568565249443054,
+    "decision_round": 889,
+    "num_total_rounds": 1,
+    "total_target_msgs": 889
+  },
+  {
+    "subject_id": "subject_OfJUd7G",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0009264408727176487,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 210
+  },
+  {
+    "subject_id": "subject_Ks3ozOm",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.717339708004147e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 808
+  },
+  {
+    "subject_id": "subject_b8xY9YA",
+    "true_label": 1,
+    "predicted_label": 1,
+    "score": 0.9998300075531006,
+    "decision_round": 970,
+    "num_total_rounds": 1,
+    "total_target_msgs": 970
+  },
+  {
+    "subject_id": "subject_AYlpVhO",
+    "true_label": 0,
+    "predicted_label": 1,
+    "score": 0.9996912479400635,
+    "decision_round": 10,
+    "num_total_rounds": 1,
+    "total_target_msgs": 10
+  },
+  {
+    "subject_id": "subject_N1TcEXO",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.027529491111636162,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 402
+  },
+  {
+    "subject_id": "subject_ImkdxJm",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.11369697004556656,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 698
+  },
+  {
+    "subject_id": "subject_VpSSvKu",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.0001168272938230075,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 36
+  },
+  {
+    "subject_id": "subject_TgAu3h1",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 9.21824321267195e-05,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 33
+  },
+  {
+    "subject_id": "subject_1DNtLxY",
+    "true_label": 0,
+    "predicted_label": 0,
+    "score": 0.00014952012861613184,
+    "decision_round": 1,
+    "num_total_rounds": 1,
+    "total_target_msgs": 176
+  }
+]
